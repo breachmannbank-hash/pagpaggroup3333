@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to Reviewer!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <h1>Text to Reviewer!</h1>
+      <p>Tested by Group 3 in Pagbasa at Pagsusuri.</p>
+    </header>
+
+    <section class="panel status-panel" aria-live="polite">
+      <span class="status-dot" id="statusDot"></span>
+      <p id="statusText">Checking internet status...</p>
+    </section>
+
+    <section class="panel">
+      <label for="reviewerText" class="section-label">Paste your reviewer here</label>
+      <textarea id="reviewerText" placeholder="Paste your notes, reviewer, or lesson text here..."></textarea>
+
+      <div class="button-row">
+        <button id="generateBtn" type="button">Send Reviewer</button>
+        <button id="clearBtn" class="secondary" type="button">Clear Data</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <h2>Reviewer output</h2>
+        <p>Available offline too</p>
+      </div>
+      <p id="message" class="message"></p>
+
+      <div class="tabs" role="tablist" aria-label="Reviewer output tabs">
+        <button id="generatedTab" class="tab-button active" type="button">Generated</button>
+        <button id="savedTab" class="tab-button" type="button">Saved questions</button>
+      </div>
+
+      <div id="generatedPanel" class="tab-panel">
+        <div id="questionsList" class="questions-list"></div>
+      </div>
+
+      <div id="savedPanel" class="tab-panel hidden">
+        <div id="savedQuestionsList" class="questions-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
