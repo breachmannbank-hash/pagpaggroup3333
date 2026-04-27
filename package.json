@@ -1,0 +1,12 @@
+{
+  "name": "pagpaggggg",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo \"No build step required for this static site.\""
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
