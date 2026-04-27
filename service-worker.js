@@ -28,10 +28,37 @@ self.addEventListener("activate", event => {
 });
 
 // Use the cache first, then try the network if a file is not cached.
+// If network fails (offline), use cached version or fallback to index.html for navigation.
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(cachedFile => {
-      return cachedFile || fetch(event.request);
+      if (cachedFile) {
+        return cachedFile;
+      }
+      
+      return fetch(event.request)
+        .then(response => {
+          // Cache successful network responses for future offline use
+          if (response && response.status === 200 && response.type !== 'basic') {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Network request failed. For navigation requests (HTML pages),
+          // return the cached index.html so the app can load with saved data
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+          // For other requests, return a placeholder response
+          return new Response('Offline - resource not cached', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          });
+        });
     })
   );
 });
