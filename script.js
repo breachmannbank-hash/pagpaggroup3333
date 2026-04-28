@@ -15,7 +15,7 @@ const TEXT_KEY = "textToReviewer.savedText";
 const QUESTIONS_KEY = "textToReviewer.savedQuestions";
 const HISTORY_KEY = "textToReviewer.savedQuestionHistory";
 
-// Show a simple online/offline message using the browser's built-in status.
+
 function updateOnlineStatus() {
   if (navigator.onLine) {
     statusText.textContent = "You are online, so you can generate questions!";
@@ -26,7 +26,6 @@ function updateOnlineStatus() {
   }
 }
 
-// Decide if a punctuation mark probably ends a sentence.
 function isSentenceEnding(text, index) {
   const punctuation = text[index];
 
@@ -39,7 +38,6 @@ function isSentenceEnding(text, index) {
   const lastWord = before.split(/\s+/).pop() || "";
   const lowerBefore = before.toLowerCase();
 
-  // Do not split examples and short abbreviations like e.g., i.e., etc., Mr., Dr.
   if (
     lastWord.toLowerCase() === "e" ||
     lastWord.toLowerCase() === "i" ||
@@ -50,7 +48,6 @@ function isSentenceEnding(text, index) {
     return false;
   }
 
-  // If the next part starts with a lowercase letter, it is probably the same sentence.
   if (after && /^[a-z,)]/.test(after)) {
     return false;
   }
@@ -58,7 +55,6 @@ function isSentenceEnding(text, index) {
   return true;
 }
 
-// Split pasted reviewer text into short sentence-like parts.
 function splitIntoSentences(text) {
   const sentences = [];
   let currentSentence = "";
@@ -81,7 +77,6 @@ function splitIntoSentences(text) {
     .filter(sentence => sentence.length > 8);
 }
 
-// Remove common copied citation markers like [11] or [citation needed].
 function cleanSentence(sentence) {
   return sentence
     .replace(/\[[^\]]+\]/g, "")
@@ -91,7 +86,6 @@ function cleanSentence(sentence) {
     .trim();
 }
 
-// Put sentences with quiz-friendly keywords first, then keep other sentences as backup.
 function chooseImportantSentences(sentences) {
   const important = sentences.filter(sentence => {
     const lowerSentence = sentence.toLowerCase();
@@ -110,7 +104,6 @@ function chooseImportantSentences(sentences) {
   return important.concat(backup).slice(0, 5);
 }
 
-// Keep question text safe when placing it on the page.
 function escapeHtml(text) {
   return text
     .replaceAll("&", "&amp;")
@@ -120,7 +113,6 @@ function escapeHtml(text) {
     .replaceAll("'", "&#039;");
 }
 
-// Create a clearer answer using simple text patterns instead of copying the full sentence.
 function makeAnswer(sentence) {
   const lowerSentence = sentence.toLowerCase();
   const populationMatch = sentence.match(/population of ([\d,]+ people)/i);
@@ -267,7 +259,7 @@ function isWeakImportanceTopic(topic) {
     /\b(want|need|should|must|can|could|may|might|indicate|show|explain|describe)\b/i.test(topic);
 }
 
-// Pick one useful word to hide for a fill-in-the-blank item.
+
 function chooseBlankWord(sentence) {
   const stopWords = [
     "the", "and", "that", "this", "with", "from", "into", "also", "only",
@@ -285,7 +277,6 @@ function chooseBlankWord(sentence) {
   return usefulWords.sort((first, second) => second.length - first.length)[0];
 }
 
-// Create a fill-in-the-blank sentence from the original reviewer sentence.
 function makeFillBlank(sentence) {
   const blankWord = chooseBlankWord(sentence);
 
@@ -323,7 +314,6 @@ function makeImportanceQuestion(sentence) {
   };
 }
 
-// Build one question from one sentence using simple rule-based patterns only.
 function makeQuestion(sentence) {
   const lowerSentence = sentence.toLowerCase();
   let question;
@@ -386,7 +376,6 @@ function makeQuestion(sentence) {
   };
 }
 
-// Create separate activity cards from the reviewer text.
 function makeStudyItems(sentences) {
   const studyItems = [];
 
@@ -409,7 +398,6 @@ function makeStudyItems(sentences) {
   return studyItems.slice(0, 5);
 }
 
-// Generate up to five study items and save them for offline viewing.
 function generateQuestions() {
   const text = reviewerText.value.trim();
   const sentences = splitIntoSentences(text);
@@ -469,7 +457,6 @@ function getSimpleType(item) {
     : "Question";
 }
 
-// Display generated questions in simple cards.
 function renderQuestions(items) {
   renderQuestionCards(items, questionsList);
 }
@@ -526,7 +513,6 @@ function renderSavedQuestions(history) {
   });
 }
 
-// Load saved reviewer text and questions when the page opens again.
 function loadSavedData() {
   const savedText = localStorage.getItem(TEXT_KEY) || "";
   let savedQuestions = [];
@@ -580,7 +566,6 @@ reviewerText.addEventListener("input", () => {
 window.addEventListener("online", updateOnlineStatus);
 window.addEventListener("offline", updateOnlineStatus);
 
-// Register the service worker so the app files can be opened offline after the first visit.
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js").catch(error => {
     console.log("Service worker registration failed:", error);
